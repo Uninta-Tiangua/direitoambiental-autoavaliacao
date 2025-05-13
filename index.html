@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Direito Ambiental: Autoavaliação</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    h1 {
+      text-align: center;
+      color: #A6192E;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .question {
+      display: none;
+    }
+    .question.active {
+      display: block;
+    }
+    .question p {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    .question input[type="radio"] {
+      margin-right: 10px;
+    }
+    .question button {
+      background-color: #A6192E;
+      color: #ffffff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 10px;
+      display: inline-block;
+      width: 100%;
+    }
+    .question button:hover {
+      background-color: #891922;
+      transform: translateY(-2px);
+    }
+    .question button:active {
+      transform: translateY(0);
+    }
+    #result {
+  display: none;
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 540px;
+  margin: 30px auto 0;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+    #result h1 {
+      color: #A6192E;
+      margin-bottom: 20px;
+    }
+    #result p {
+      font-size: 18px;
+      color: #333;
+      line-height: 1.6;
+    }
+    #result strong {
+      color: #A6192E;
+    }
+    #result img {
+  margin-top: 20px;
+  max-width: 130px;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Direito Ambiental: Autoavaliação</h1>
+
+    <div id="questions"></div>
+
+    <div id="result">
+      <h1>Seu Resultado</h1>
+      <p id="vocational-result"></p>
+      <img src="images/logo-uninta.png" alt="Logo UNINTA">
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      "1. Quando você acorda e vai escovar os dentes, como faz?",
+      "2. Na hora de tomar banho, quanto tempo você costuma levar?",
+      "3. Você costuma usar chuveiro elétrico?",
+      "4. Quando vai ao mercantil fazer compras, você:",
+      "5. O descarte do seu lixo em casa é feito:",
+      "6. Em relação às suas roupas:",
+      "7. Qual hábito mais define sua alimentação?",
+      "8. Sobre a energia elétrica na minha casa:",
+      "9. Sobre o meu celular, eu:",
+      "10. Para ir a um lugar de até 500 metros, eu:"
+    ];
+
+    const options = [
+      ["Escovo os dentes com a torneira fechada.", "Às vezes deixo a torneira aberta sem perceber.", "Escovo com a torneira aberta o tempo todo."],
+      ["Menos de 5 minutos.", "De 5 a 10 minutos.", "Mais de 15 minutos."],
+      ["Não uso.", "Às vezes.", "Frequentemente."],
+      ["Leva sacola reutilizável e compra só o necessário.", "Usa sacolas plásticas e compra um pouco a mais.", "Usa muitas sacolas e compra por impulso."],
+      ["Separando corretamente.", "Às vezes separo.", "Tudo vai no mesmo saco."],
+      ["Compro o necessário e reutilizo.", "Compro às vezes.", "Compro roupas com frequência."],
+      ["Evito desperdícios e cozinho em casa.", "Às vezes jogo comida fora.", "Desperdiço e como fora com frequência."],
+      ["Desligo o que não estou usando.", "Às vezes esqueço.", "Deixo ligado com frequência."],
+      ["Uso moderadamente e carrego quando precisa.", "Uso bastante, mas tento equilibrar.", "Uso o tempo todo e deixo carregando com frequência."],
+      ["Vou a pé ou de bicicleta.", "Às vezes vou de carro.", "Sempre vou de carro."]
+    ];
+
+    let scores = { excelente: 0, moderado: 0, ruim: 0 };
+    let current = 0;
+
+    function renderQuestion(index) {
+      const container = document.getElementById('questions');
+      container.innerHTML = '';
+      const div = document.createElement('div');
+      div.classList.add('question', 'active');
+      const p = document.createElement('p');
+      p.innerText = questions[index];
+      div.appendChild(p);
+      options[index].forEach((opt, i) => {
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'q' + (index + 1);
+        radio.value = i + 1;
+        div.appendChild(radio);
+        div.append(opt);
+        div.appendChild(document.createElement('br'));
+      });
+      const btn = document.createElement('button');
+      btn.textContent = index === questions.length - 1 ? 'Ver Resultado' : 'Próxima Pergunta';
+      btn.onclick = () => {
+        const selected = div.querySelector('input[type=radio]:checked');
+        if (!selected) {
+          alert('Por favor, selecione uma opção.');
+          return;
+        }
+        const val = parseInt(selected.value);
+        if (val === 1) scores.excelente++;
+        else if (val === 2) scores.moderado++;
+        else scores.ruim++;
+        current++;
+        if (current < questions.length) renderQuestion(current);
+        else showResult();
+      };
+      div.appendChild(btn);
+      container.appendChild(div);
+    }
+
+    function showResult() {
+      document.getElementById('questions').style.display = 'none';
+      const result = document.getElementById('result');
+      result.style.display = 'block';
+      let msg = '';
+      if (scores.ruim >= 4) {
+        msg = "<strong>Consumo não consciente:</strong> Você precisa repensar suas escolhas diárias.";
+      } else if (scores.moderado >= 4) {
+        msg = "<strong>Seu consumo é moderadamente consciente:</strong> Pequenas mudanças podem fazer grande diferença!";
+      } else {
+        msg = "<strong>Excelente!</strong> Seu consumo é consciente e você está no caminho certo. Continue fazendo escolhas sustentáveis no seu dia a dia!";
+      }
+      document.getElementById('vocational-result').innerHTML = msg;
+
+      const encodedMsg = encodeURIComponent(msg.replace(/<[^>]*>/g, ''));
+      const whatsappLink = `https://wa.me/?text=${encodedMsg}`;
+      const emailLink = `mailto:?subject=Resultado da Autoavaliação&body=${encodedMsg}`;
+
+      const buttons = `
+        <p style="margin-top: 25px; font-weight: 500; font-size: 14px; color: #444;">Receba o resultado pelo:</p>
+        <a href="${whatsappLink}" target="_blank" style="display:inline-block;margin:8px 6px 0;padding:8px 16px;background:#25D366;color:white;border-radius:20px;text-decoration:none;font-size:14px;font-weight:500;">WhatsApp</a>
+        <a href="${emailLink}" style="display:inline-block;margin:8px 6px 0;padding:8px 16px;background:#A6192E;color:white;border-radius:20px;text-decoration:none;font-size:14px;font-weight:500;">E-mail</a>
+      `;
+      document.getElementById('vocational-result').innerHTML += buttons;
+    }
+
+    renderQuestion(current);
+  </script>
+</body>
+</html>
